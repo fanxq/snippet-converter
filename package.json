@@ -1,0 +1,22 @@
+{
+  "name": "snippet-converter",
+  "version": "1.0.0",
+  "description": "convert some snippets.json in vscode to .snippet files for vs2015",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "snippet-converter":"index.js"
+  },
+  "keywords": [
+    "snippet",
+    "vscode",
+    "vs2015"
+  ],
+  "author": "fanxq",
+  "license": "MIT",
+  "dependencies": {
+    "xmlbuilder": "^10.1.1"
+  }
+}
