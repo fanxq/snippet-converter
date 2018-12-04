@@ -4,10 +4,11 @@
   "description": "convert some snippets.json in vscode to .snippet files for vs2015",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "testinquirer":"node index1.js"
   },
   "bin": {
-    "snippet-converter":"index.js"
+    "snippet-converter": "index.js"
   },
   "keywords": [
     "snippet",
@@ -17,6 +18,7 @@
   "author": "fanxq",
   "license": "MIT",
   "dependencies": {
+    "inquirer": "^6.2.1",
     "xmlbuilder": "^10.1.1"
   }
 }
