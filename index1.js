@@ -2,7 +2,9 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 const path = require('path');
 const builder = require('xmlbuilder');
-
+const progressBar = require('progress');
+let bar;
+let index = 0;
 let questions = [{
         type: 'input',
         name: 'snippet_file',
@@ -48,7 +50,7 @@ function creactSnippetFile(snippetItem, desPath, lang) {
     var title = header.ele('Title');
     title.text(snippetItem.prefix);
     var author = header.ele('Author');
-    author.text('Goldpac Corporation');
+    author.text('fanxq');
     var shortcut = header.ele('Shortcut');
     shortcut.text(snippetItem.prefix);
     var description = header.ele('Description');
@@ -58,7 +60,6 @@ function creactSnippetFile(snippetItem, desPath, lang) {
     snippetTypes.ele('SnippetType', null, 'SurroundsWith');
     var snippet = root.ele('Snippet');
     var declarations = snippet.ele('Declarations');
-    //var reg = /(\$\d+)|(\$\{\d+:\w*\})/g;
     var reg = /(\$\d+)|(\$\{[\d\w:]{1,}\})/g;
     var strcode = snippetItem.body.toString();
     var matchs = strcode.match(reg);
@@ -79,11 +80,8 @@ function creactSnippetFile(snippetItem, desPath, lang) {
         }
     }
 
-    var code = snippet.ele('Code').att('Language', lang); //for javascript
-    //var code = snippet.ele('Code').att('Language',"html");
-    //var snippetTpl = `<![CDATA[${strcode}$end$]]>`;
+    var code = snippet.ele('Code').att('Language', lang); 
     code.cdata(strcode + '$end$');
-    //code.text(snippetTpl);
     root.end({
         pretty: true
     });
@@ -91,27 +89,37 @@ function creactSnippetFile(snippetItem, desPath, lang) {
     if (!fs.existsSync(desPath)) {
         fs.mkdirSync(desPath);
     }
-    fs.writeFile(path.join(desPath, tFileName), root, function (err) {
-        if (err) {
-            console.log(err.message);
-        }
-    });
+    // fs.writeFile(path.join(desPath, tFileName), root, function (err) {
+    //     if (err) {
+    //         console.log(err.message);
+    //     }
+    // });
+    fs.writeFileSync(path.join(desPath, tFileName),root,{encoding:'utf8'});
+    bar.tick(index);
+    index++;
 }
 
 inquirer.prompt(questions).then(function (answers) {
     //console.log(answers);
-    var outputPath = path.join(answers.des_folder, 'snippets', answers.lang === 'html' ? 'html' : 'javascript');
-    fs.mkdirSync();
+    var outputPath = path.join(answers.des_folder, answers.lang === 'html' ? 'html.snippets' : 'javascript.snippets');
+    fs.mkdirSync(outputPath);
     fs.readFile(answers.snippet_file, function (err, data) {
         if (err) {
             console.log(err.message);
             return;
         }
 
-        var snippetsObj = JSON.parse(data.toString());
-        for (var i in snippetsObj) {
+        var snippetItems = JSON.parse(data.toString());
+        bar = new progressBar('  downloading [:bar] :percent ', {
+            complete: '=',
+            incomplete: ' ',
+            width: 20,
+            total: Object.keys(snippetItems).length
+          });
+
+        for (var i in snippetItems) {
             //console.log(i);
-            creactSnippetFile(snippetsObj[i], outputPath, answers.lang);
+            creactSnippetFile(snippetItems[i], outputPath, answers.lang);
         }
     });
 
