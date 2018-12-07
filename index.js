@@ -28,6 +28,9 @@ let questions = [{
         message: "folder to store the converted snippet files(for vs)",
         default: "./snippets",
         validate: function (val) {
+            if(val === './snippets'){
+                return true;
+            }
             if (!fs.existsSync(val)) {
                 return "Please enter a valid path";
             }
