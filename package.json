@@ -8,7 +8,7 @@
     "start": "node index.js"
   },
   "bin": {
-    "snippet-converter": "index.js"
+    "sconv": "index.js"
   },
   "keywords": [
     "snippet",
