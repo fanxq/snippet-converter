@@ -28,7 +28,7 @@ let questions = [{
         message: "folder to store the converted snippet files(for vs)",
         default: "./snippets",
         validate: function (val) {
-            if(val === './snippets'){
+            if (val === './snippets') {
                 return true;
             }
             if (!fs.existsSync(val)) {
@@ -40,7 +40,7 @@ let questions = [{
     {
         type: "list",
         name: "lang",
-        message: "Which language is your snippet?",
+        message: "language of your snippet?",
         choices: ["html", "JavaScript"]
     }
 ];
